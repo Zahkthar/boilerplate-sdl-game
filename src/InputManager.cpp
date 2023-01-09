@@ -26,14 +26,20 @@ void InputManager::clearCallbacks()
 
 void InputManager::updateMouse(SDL_Event &event)
 {
-    if(event.type == SDL_MOUSEMOTION)
+    switch (event.type)
     {
+    case SDL_MOUSEMOTION:
         mousePosX = event.motion.x;
         mousePosY = event.motion.y;
-    }
-    else // SDL_MOUSEBUTTONDOWN or SDL_MOUSEBUTTONUP
-    {
+        break;
+
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEBUTTONDOWN:
         mouseState[event.button.button] = (event.type == SDL_MOUSEBUTTONDOWN) ? true : false;
+        break;
+    
+    default:
+        break;
     }
 
     if(mouseCallbacks.contains(event.type))
@@ -76,13 +82,25 @@ void InputManager::setMousePosition(SDL_Window *window, int x, int y)
  * Keyboard
  */
 
-void InputManager::updateKeyboard(SDL_KeyboardEvent &event)
+void InputManager::updateKeyboard(SDL_Event &event)
 {
-    keyboardState[event.keysym.scancode] = (event.type == SDL_KEYDOWN) ? true : false;
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        keyboardState[event.key.keysym.scancode] = true;
+        break;
+
+    case SDL_KEYUP:
+        keyboardState[event.key.keysym.scancode] = false;
+        break;
+
+    default:
+        break;
+    }
 
     if(keyboardCallbacks.contains(event.type))
     {
-        keyboardCallbacks[event.type](event.keysym.scancode);
+        keyboardCallbacks[event.type](event.key.keysym.scancode);
     }
 }
 

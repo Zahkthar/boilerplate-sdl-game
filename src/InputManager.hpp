@@ -25,7 +25,7 @@ public:
     void setMousePosition(SDL_Window *window, int x, int y);
 
     // Keyboard
-    void updateKeyboard(SDL_KeyboardEvent &event);
+    void updateKeyboard(SDL_Event &event);
 
     bool isKeyboardKeyPressed(SDL_KeyCode key);
 
