@@ -28,6 +28,9 @@ void SceneMainMenu::initScene()
 
     // Chunks
     m_ressourceManager.loadChunk("res/sounds/sound.wav", "sound");
+
+    // Callbacks
+    m_inputManager.setMouseCallback(SDL_MOUSEBUTTONDOWN, [this](Uint8 button) { onMouseClick(button); });
 }
 
 void SceneMainMenu::cleanScene()
@@ -45,6 +48,15 @@ void SceneMainMenu::cleanScene()
 
     // Chunks
     m_ressourceManager.unloadChunk("sound");
+
+    // Callbacks
+    m_inputManager.clearCallbacks();
+}
+
+void SceneMainMenu::onMouseClick(Uint8 button)
+{
+    std::cout << "Mouse click !" << std::endl;
+    std::cout << chessBoardRect.x << std::endl;
 }
 
 void SceneMainMenu::update(float deltaTime) {
@@ -54,7 +66,7 @@ void SceneMainMenu::update(float deltaTime) {
         m_sceneManager.setCurrentScene("exitGame");
     }
 
-    std::cout << 1 / deltaTime << std::endl; // FPS
+    //std::cout << 1 / deltaTime << std::endl; // FPS
 }
 
 void SceneMainMenu::render() {

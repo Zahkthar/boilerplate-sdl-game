@@ -1,13 +1,28 @@
 #include "InputManager.hpp"
 
 /*
- * Global
+ * Callbacks
  */
 
-void InputManager::updateKeyboard(SDL_KeyboardEvent &event)
+void InputManager::setMouseCallback(Uint32 eventType, std::function<void(Uint8)> callbackFunction)
 {
-    keyboardState[event.keysym.scancode] = (event.type == SDL_KEYDOWN) ? true : false;
+    mouseCallbacks[eventType] = callbackFunction;
 }
+
+void InputManager::setKeyboardCallback(Uint32 eventType, std::function<void(Uint8)> callbackFunction)
+{
+    keyboardCallbacks[eventType] = callbackFunction;
+}
+
+void InputManager::clearCallbacks()
+{
+    mouseCallbacks.clear();
+    keyboardCallbacks.clear();
+}
+
+/*
+ * Mouse
+ */
 
 void InputManager::updateMouse(SDL_Event &event)
 {
@@ -20,11 +35,12 @@ void InputManager::updateMouse(SDL_Event &event)
     {
         mouseState[event.button.button] = (event.type == SDL_MOUSEBUTTONDOWN) ? true : false;
     }
-}
 
-/*
- * Mouse
- */
+    if(mouseCallbacks.contains(event.type))
+    {
+        mouseCallbacks[event.type](event.button.button);
+    }
+}
 
 bool InputManager::isMouseButtonPressed(Uint32 button)
 {
@@ -59,6 +75,16 @@ void InputManager::setMousePosition(SDL_Window *window, int x, int y)
 /*
  * Keyboard
  */
+
+void InputManager::updateKeyboard(SDL_KeyboardEvent &event)
+{
+    keyboardState[event.keysym.scancode] = (event.type == SDL_KEYDOWN) ? true : false;
+
+    if(keyboardCallbacks.contains(event.type))
+    {
+        keyboardCallbacks[event.type](event.keysym.scancode);
+    }
+}
 
 bool InputManager::isKeyboardKeyPressed(SDL_KeyCode key)
 {

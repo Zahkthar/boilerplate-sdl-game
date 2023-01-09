@@ -2,6 +2,7 @@
 #define MAIN_MENU_SCENE_HPP_INCLUDED
 
 #include <iostream>
+#include <functional>
 
 #include <SDL2/SDL.h>
 
@@ -25,6 +26,8 @@ public:
 	void render();
 	
 private:
+	void onMouseClick(Uint8 button);
+	
 	SDL_Color mainMenuBackgroundColor = { 30, 74, 32, 255 };
 
 	SDL_Rect chessBoardRect;
