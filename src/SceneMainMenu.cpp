@@ -30,7 +30,7 @@ void SceneMainMenu::initScene()
     m_ressourceManager.loadChunk("res/sounds/sound.wav", "sound");
 
     // Callbacks
-    m_inputManager.setMouseCallback(SDL_MOUSEBUTTONDOWN, onMouseClick, this);
+    m_inputManager.setMouseCallback(SDL_MOUSEBUTTONDOWN, [this](Uint8 button) { onMouseClick(button); });
 }
 
 void SceneMainMenu::cleanScene()
@@ -53,12 +53,10 @@ void SceneMainMenu::cleanScene()
     m_inputManager.clearCallbacks();
 }
 
-void SceneMainMenu::onMouseClick(void *thisPtr, Uint8 button)
+void SceneMainMenu::onMouseClick(Uint8 button)
 {
-    SceneMainMenu *self = static_cast<SceneMainMenu*>(thisPtr);
-
     std::cout << "Mouse click !" << std::endl;
-    std::cout << self->chessBoardRect.x << std::endl;
+    std::cout << chessBoardRect.x << std::endl;
 }
 
 void SceneMainMenu::update(float deltaTime) {

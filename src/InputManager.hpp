@@ -11,8 +11,8 @@ class InputManager
 {
 public:
     // Callbacks
-    void setMouseCallback(Uint32 eventType, std::function<void(void *, Uint8)> callbackFunction, void *thisPtr);
-    void setKeyboardCallback(Uint32 eventType, std::function<void(void *, Uint8)> callbackFunction, void *thisPtr);
+    void setMouseCallback(Uint32 eventType, std::function<void(Uint8)> callbackFunction);
+    void setKeyboardCallback(Uint32 eventType, std::function<void(Uint8)> callbackFunction);
     void clearCallbacks();
 
     // Mouse
@@ -32,14 +32,14 @@ public:
 private:
     // Mouse
     std::unordered_map<int, bool> mouseState;
-    std::unordered_map<int, std::pair<std::function<void(void *, Uint8)>, void *>> mouseCallbacks;
+    std::unordered_map<int, std::function<void(Uint8)>> mouseCallbacks;
 
     int mousePosX;
     int mousePosY;
 
     // Keyboard
     std::unordered_map<SDL_Scancode, bool> keyboardState;
-    std::unordered_map<int, std::pair<std::function<void(void *, SDL_Scancode)>, void *>> keyboardCallbacks;
+    std::unordered_map<int, std::function<void(SDL_Scancode)>> keyboardCallbacks;
 };
 
 #endif // INPUT_MANAGER_HPP_INCLUDED

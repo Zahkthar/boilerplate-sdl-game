@@ -26,7 +26,7 @@ public:
 	void render();
 	
 private:
-	static void onMouseClick(void *thisPtr, Uint8 button);
+	void onMouseClick(Uint8 button);
 	
 	SDL_Color mainMenuBackgroundColor = { 30, 74, 32, 255 };
 
