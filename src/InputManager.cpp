@@ -1,30 +1,52 @@
 #include "InputManager.hpp"
 
 /*
- * Global
+ * Callbacks
  */
 
-void InputManager::updateKeyboard(SDL_KeyboardEvent &event)
+void InputManager::setMouseCallback(Uint32 eventType, std::function<void(Uint8)> callbackFunction)
 {
-    keyboardState[event.keysym.scancode] = (event.type == SDL_KEYDOWN) ? true : false;
+    mouseCallbacks[eventType] = callbackFunction;
 }
 
-void InputManager::updateMouse(SDL_Event &event)
+void InputManager::setKeyboardCallback(Uint32 eventType, std::function<void(Uint8)> callbackFunction)
 {
-    if(event.type == SDL_MOUSEMOTION)
-    {
-        mousePosX = event.motion.x;
-        mousePosY = event.motion.y;
-    }
-    else // SDL_MOUSEBUTTONDOWN or SDL_MOUSEBUTTONUP
-    {
-        mouseState[event.button.button] = (event.type == SDL_MOUSEBUTTONDOWN) ? true : false;
-    }
+    keyboardCallbacks[eventType] = callbackFunction;
+}
+
+void InputManager::clearCallbacks()
+{
+    mouseCallbacks.clear();
+    keyboardCallbacks.clear();
 }
 
 /*
  * Mouse
  */
+
+void InputManager::updateMouse(SDL_Event &event)
+{
+    switch (event.type)
+    {
+    case SDL_MOUSEMOTION:
+        mousePosX = event.motion.x;
+        mousePosY = event.motion.y;
+        break;
+
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEBUTTONDOWN:
+        mouseState[event.button.button] = (event.type == SDL_MOUSEBUTTONDOWN) ? true : false;
+        break;
+    
+    default:
+        break;
+    }
+
+    if(mouseCallbacks.contains(event.type))
+    {
+        mouseCallbacks[event.type](event.button.button);
+    }
+}
 
 bool InputManager::isMouseButtonPressed(Uint32 button)
 {
@@ -59,6 +81,28 @@ void InputManager::setMousePosition(SDL_Window *window, int x, int y)
 /*
  * Keyboard
  */
+
+void InputManager::updateKeyboard(SDL_Event &event)
+{
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        keyboardState[event.key.keysym.scancode] = true;
+        break;
+
+    case SDL_KEYUP:
+        keyboardState[event.key.keysym.scancode] = false;
+        break;
+
+    default:
+        break;
+    }
+
+    if(keyboardCallbacks.contains(event.type))
+    {
+        keyboardCallbacks[event.type](event.key.keysym.scancode);
+    }
+}
 
 bool InputManager::isKeyboardKeyPressed(SDL_KeyCode key)
 {

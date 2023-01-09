@@ -124,15 +124,22 @@ void Game::update()
             sceneManager->setCurrentScene("exitGame");
             break;
 
+        // Mouse
+        case SDL_MOUSEWHEEL:
         case SDL_MOUSEMOTION:
         case SDL_MOUSEBUTTONUP:
         case SDL_MOUSEBUTTONDOWN:
             inputManager.updateMouse(event);
             break;
 
+        // Keyboard
         case SDL_KEYUP:
         case SDL_KEYDOWN:
-            inputManager.updateKeyboard(event.key);
+        case SDL_TEXTEDITING:
+        case SDL_TEXTINPUT:
+        case SDL_KEYMAPCHANGED:
+        case SDL_TEXTEDITING_EXT:
+            inputManager.updateKeyboard(event);
             break;
 
         default:
